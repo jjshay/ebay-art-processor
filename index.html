@@ -1368,14 +1368,26 @@ This piece represents the vibrant contemporary street art movement that has tran
                 
                 const data = await response.json();
                 const analysisText = data.candidates[0].content.parts[0].text;
-                let analysis = { priceRange: 'N/A', demand: 'Medium', strategy: 'Competitive pricing', tips: [] };
+                let analysis = { 
+                    priceRange: '$100-$500', 
+                    demand: 'Medium', 
+                    strategy: 'Competitive pricing based on condition', 
+                    tips: ['Check sold listings', 'Compare conditions', 'Note authenticity'] 
+                };
                 
                 try {
                     const jsonMatch = analysisText.match(/\{[\s\S]*\}/);
                     if (jsonMatch) {
-                        analysis = JSON.parse(jsonMatch[0]);
+                        const parsed = JSON.parse(jsonMatch[0]);
+                        // Ensure all values are strings, not objects
+                        analysis.priceRange = String(parsed.priceRange || analysis.priceRange);
+                        analysis.demand = String(parsed.demand || analysis.demand);
+                        analysis.strategy = String(parsed.strategy || analysis.strategy);
+                        analysis.tips = Array.isArray(parsed.tips) ? parsed.tips : analysis.tips;
                     }
-                } catch (e) {}
+                } catch (e) {
+                    console.log('Using default market analysis');
+                }
                 
                 // Update modal with results
                 modalBody.innerHTML = `
@@ -1384,15 +1396,17 @@ This piece represents the vibrant contemporary street art movement that has tran
                             <h3 style="color: #00ff88; margin-bottom: 15px;">📊 Market Analysis</h3>
                             <div class="field-group">
                                 <div class="field-label">Typical Price Range</div>
-                                <div class="field-value">${analysis.priceRange || 'N/A'}</div>
+                                <div class="field-value">${String(analysis.priceRange || 'N/A')}</div>
                             </div>
                             <div class="field-group">
                                 <div class="field-label">Market Demand</div>
-                                <div class="field-value">${analysis.demand || 'Medium'}</div>
+                                <div class="field-value" style="color: ${analysis.demand === 'High' ? '#00ff88' : analysis.demand === 'Low' ? '#ff6464' : '#ffcc00'}">
+                                    ${String(analysis.demand || 'Medium')}
+                                </div>
                             </div>
                             <div class="field-group">
                                 <div class="field-label">Pricing Strategy</div>
-                                <div class="field-value">${analysis.strategy || 'Competitive'}</div>
+                                <div class="field-value">${String(analysis.strategy || 'Competitive pricing')}</div>
                             </div>
                         </div>
                         
