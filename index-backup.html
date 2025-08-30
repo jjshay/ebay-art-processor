@@ -924,9 +924,9 @@
             const seoTitle = `${artist} ${subject} Street Art | Authentic Contemporary Print`;
             const seoDescription = `Authentic ${artist} artwork featuring ${subject}. Original street art print in ${condition} condition. Perfect for collectors and art enthusiasts. Fast shipping.`;
             
-            // Generate professional description with storyline
-            const detectedSubject = subject; // Use the actual detected subject
-            const description = `**${artist.toUpperCase()} - "${detectedSubject}"**
+            // Generate comprehensive description with enhanced details
+            const enhancedSubject = analysis.enhancedSubject || subject;
+            const description = `🎨 AUTHENTIC ${artist.toUpperCase()} - "${enhancedSubject.toUpperCase()}" - ORIGINAL ARTWORK 🎨
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -943,9 +943,10 @@ This piece represents the vibrant contemporary street art movement that has tran
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-**ARTWORK DETAILS:**
-• Artist: ${artist}
-• Subject: ${detectedSubject}
+📌 ARTWORK DETAILS:
+
+• ARTIST: ${artist}
+• SUBJECT/TITLE: ${enhancedSubject}
 • STYLE: ${analysis.style || 'Contemporary Street Art'}
 • MEDIUM: ${analysis.medium || 'High-Quality Print on Archival Paper'}
 • CONDITION: ${condition} - Carefully preserved and stored in protective sleeve
