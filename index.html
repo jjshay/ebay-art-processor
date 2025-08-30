@@ -522,8 +522,11 @@
     </div>
     
     <script>
-        // Gemini API key
-        const GEMINI_KEY = 'AIzaSyCQ664To1EWvt4OGIEzMuV0D0QTxnXuj38';
+        // Gemini API key - REPLACE WITH YOUR OWN KEY
+        const GEMINI_KEY = prompt('Please enter your Gemini API key:') || localStorage.getItem('gemini_key') || '';
+        if (GEMINI_KEY && GEMINI_KEY !== localStorage.getItem('gemini_key')) {
+            localStorage.setItem('gemini_key', GEMINI_KEY);
+        }
         
         let selectedFiles = [];
         let processedData = [];
