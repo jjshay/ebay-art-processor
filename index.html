@@ -402,6 +402,12 @@
         <h1>🚀 eBay & Marketplace Processor</h1>
         <div class="subtitle">AI-Powered • 29 Auto-Fill Fields • Smart Renaming • Market Research</div>
         
+        <div style="text-align: center; margin: 10px 0;">
+            <button onclick="resetApiKey()" style="padding: 8px 15px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #999; border-radius: 5px; cursor: pointer; font-size: 12px;">
+                🔑 Change API Key
+            </button>
+        </div>
+        
         <div class="panel">
             <h2 style="color: #00ff88; margin-bottom: 20px;">📸 Step 1: Upload Artwork</h2>
             
@@ -521,12 +527,90 @@
         </div>
     </div>
     
+    <!-- Welcome/Setup Modal -->
+    <div id="welcomeModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 800px; background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);">
+            <div style="text-align: center; padding: 20px;">
+                <h1 style="color: #00ff88; font-size: 2.5em; margin-bottom: 20px;">🎨 Welcome to eBay Art Processor!</h1>
+                
+                <div style="background: rgba(0,255,136,0.1); border: 2px solid #00ff88; border-radius: 15px; padding: 25px; margin: 20px 0;">
+                    <h2 style="color: #00ff88; margin-bottom: 15px;">⚡ Quick Setup (One-Time Only)</h2>
+                    <p style="color: #fff; font-size: 1.1em; line-height: 1.6;">
+                        This tool uses Google's Gemini AI to identify artwork.<br>
+                        You'll need a <strong style="color: #00ff88;">FREE API key</strong> that takes 30 seconds to get!
+                    </p>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.05); border-radius: 15px; padding: 30px; margin: 20px 0;">
+                    <h3 style="color: #00ccff; margin-bottom: 20px; font-size: 1.5em;">📋 Get Your Free API Key in 3 Steps:</h3>
+                    
+                    <div style="text-align: left; max-width: 600px; margin: 0 auto;">
+                        <div style="background: rgba(0,204,255,0.1); border-left: 4px solid #00ccff; padding: 15px; margin: 15px 0; border-radius: 5px;">
+                            <strong style="color: #00ccff; font-size: 1.2em;">Step 1:</strong>
+                            <p style="color: #fff; margin-top: 5px;">
+                                Click this link to open Google AI Studio:<br>
+                                <a href="https://makersuite.google.com/app/apikey" target="_blank" 
+                                   style="color: #00ff88; font-weight: bold; text-decoration: underline;">
+                                   🔗 makersuite.google.com/app/apikey
+                                </a>
+                            </p>
+                        </div>
+                        
+                        <div style="background: rgba(0,204,255,0.1); border-left: 4px solid #00ccff; padding: 15px; margin: 15px 0; border-radius: 5px;">
+                            <strong style="color: #00ccff; font-size: 1.2em;">Step 2:</strong>
+                            <p style="color: #fff; margin-top: 5px;">
+                                Sign in with your Google account<br>
+                                <small style="color: #999;">(Any Gmail account works)</small>
+                            </p>
+                        </div>
+                        
+                        <div style="background: rgba(0,204,255,0.1); border-left: 4px solid #00ccff; padding: 15px; margin: 15px 0; border-radius: 5px;">
+                            <strong style="color: #00ccff; font-size: 1.2em;">Step 3:</strong>
+                            <p style="color: #fff; margin-top: 5px;">
+                                Click "<strong>Create API Key</strong>" button<br>
+                                <small style="color: #999;">It looks like: AIzaSy... (39 characters)</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(102,126,234,0.1); border: 2px solid #667eea; border-radius: 15px; padding: 25px; margin: 20px 0;">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">🔑 Enter Your API Key:</h3>
+                    <input type="text" 
+                           id="apiKeyInput" 
+                           placeholder="Paste your API key here (starts with AIzaSy...)" 
+                           style="width: 100%; padding: 15px; font-size: 16px; background: rgba(255,255,255,0.1); border: 2px solid #667eea; color: #fff; border-radius: 8px; margin-bottom: 15px;"
+                           onkeypress="if(event.key === 'Enter') saveApiKey()">
+                    <button onclick="saveApiKey()" 
+                            style="padding: 15px 40px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; transition: all 0.3s;"
+                            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 10px 30px rgba(102,126,234,0.4)'" 
+                            onmouseout="this.style.transform=''; this.style.boxShadow=''">
+                        ✅ Save & Start Processing
+                    </button>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.03); border-radius: 10px; padding: 20px; margin-top: 20px;">
+                    <p style="color: #999; font-size: 0.9em; line-height: 1.5;">
+                        💡 <strong>Why do I need this?</strong> The AI that identifies Death NYC vs Shepard Fairey artwork needs an API key to work.<br>
+                        🔒 <strong>Privacy:</strong> Your key is stored only in your browser, never sent anywhere else.<br>
+                        💰 <strong>Cost:</strong> Google gives you <strong>FREE credits</strong> - enough for thousands of images!<br>
+                        ⏱️ <strong>One-time setup:</strong> You'll never need to do this again on this device.
+                    </p>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <button onclick="document.getElementById('welcomeModal').style.display='none'" 
+                            style="padding: 10px 20px; background: transparent; border: 1px solid #666; color: #999; border-radius: 5px; cursor: pointer;">
+                        Skip for now (won't work without key)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script>
-        // Gemini API key - REPLACE WITH YOUR OWN KEY
-        const GEMINI_KEY = prompt('Please enter your Gemini API key:') || localStorage.getItem('gemini_key') || '';
-        if (GEMINI_KEY && GEMINI_KEY !== localStorage.getItem('gemini_key')) {
-            localStorage.setItem('gemini_key', GEMINI_KEY);
-        }
+        // Gemini API key management
+        let GEMINI_KEY = localStorage.getItem('gemini_key') || '';
         
         let selectedFiles = [];
         let processedData = [];
@@ -535,6 +619,11 @@
         // Setup
         document.addEventListener('DOMContentLoaded', () => {
             console.log('✅ Marketplace Processor Ready!');
+            
+            // Check for API key on load
+            if (!GEMINI_KEY) {
+                showWelcomeModal();
+            }
             
             const fileInput = document.getElementById('fileInput');
             const uploadArea = document.getElementById('uploadArea');
@@ -1446,6 +1535,43 @@ This piece represents the vibrant contemporary street art movement that has tran
             setTimeout(() => {
                 message.className = 'message';
             }, 5000);
+        }
+        
+        function showWelcomeModal() {
+            document.getElementById('welcomeModal').style.display = 'block';
+        }
+        
+        function saveApiKey() {
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+            
+            if (!apiKey) {
+                alert('Please enter your API key');
+                return;
+            }
+            
+            if (!apiKey.startsWith('AIzaSy') || apiKey.length < 39) {
+                alert('Invalid API key format. It should start with "AIzaSy" and be 39 characters long.');
+                return;
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('gemini_key', apiKey);
+            GEMINI_KEY = apiKey;
+            
+            // Close modal
+            document.getElementById('welcomeModal').style.display = 'none';
+            
+            // Show success message
+            showMessage('✅ API Key saved successfully! You can now process images.', 'success');
+        }
+        
+        // Add settings button to reset API key
+        function resetApiKey() {
+            if (confirm('Reset API key and enter a new one?')) {
+                localStorage.removeItem('gemini_key');
+                GEMINI_KEY = '';
+                showWelcomeModal();
+            }
         }
     </script>
 </body>
