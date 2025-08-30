@@ -400,7 +400,7 @@
 <body>
     <div class="container">
         <h1>✨ Marketplace Magic</h1>
-        <div class="subtitle">AI-Powered Art Listings • 29 Auto-Fill Fields • Smart Renaming • Market Research</div>
+        <div class="subtitle">AI-Powered Art Listings • 27 Auto-Fill Fields • Smart Renaming • Market Research</div>
         
         <div style="text-align: center; margin: 10px 0;">
             <button onclick="resetApiKey()" style="padding: 8px 15px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #999; border-radius: 5px; cursor: pointer; font-size: 12px;">
@@ -469,7 +469,7 @@
             
             <div class="success-notice">
                 <h3 style="color: #00ff88; margin-bottom: 10px;">✅ Data Ready for Export!</h3>
-                <p>29 marketplace fields auto-generated (size/weight/dimensions will be hard-coded). You can edit any field below before exporting.</p>
+                <p>27 marketplace fields auto-generated (size/weight/dimensions will be hard-coded). You can edit any field below before exporting.</p>
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
@@ -983,8 +983,6 @@ TAGS: ${artist} | ${subject} | Street Art | Contemporary Art | Urban Art | Moder
                 isDigital: 'No',
                 whoMadeIt: artist === 'Death NYC' || artist === 'Shepard Fairey' ? 'The artist' : 'Unknown',
                 whenMade: '2020-2024',
-                variantName: 'Size',
-                variantValue: '11x14 inches',
                 seoTitle: seoTitle,
                 seoDescription: seoDescription,
                 itemSpecifics: `Type: Print | Artist: ${artist} | Subject: ${subject} | Style: ${analysis.style || 'Street Art'} | Signed: ${artist === 'Death NYC' || artist === 'Shepard Fairey' ? 'Yes' : 'No'}`,
@@ -1070,8 +1068,6 @@ This piece represents the vibrant contemporary street art movement that has tran
                 isDigital: 'No',
                 whoMadeIt: 'Unknown',
                 whenMade: '2020-2024',
-                variantName: 'Size',
-                variantValue: '11x14 inches',
                 seoTitle: 'Contemporary Street Art Print',
                 seoDescription: 'Original street art print for collectors',
                 itemSpecifics: 'Type: Print',
@@ -1102,11 +1098,11 @@ This piece represents the vibrant contemporary street art movement that has tran
             tbody.innerHTML = '';
             
             processedData.forEach((item, index) => {
-                // Count filled fields (29 required fields - excluding size/weight/dimensions)
+                // Count filled fields (27 required fields - excluding size/weight/dimensions/variants)
                 const requiredFields = ['sku', 'picture', 'title', 'originalPrice', 'price', 'description',
                     'quantity', 'brand', 'category', 'subcategory', 'condition', 'color', 'materials', 
                     'tags', 'imageUrls', 'artist', 'signedBy', 'year', 'shippingFee', 'shippingMethod', 
-                    'personalization', 'isDigital', 'whoMadeIt', 'whenMade', 'variantName', 'variantValue', 
+                    'personalization', 'isDigital', 'whoMadeIt', 'whenMade', 
                     'seoTitle', 'seoDescription', 'itemSpecifics'];
                 
                 let filledFields = 0;
@@ -1126,7 +1122,7 @@ This piece represents the vibrant contemporary street art movement that has tran
                         onchange="updateData(${index}, 'title', this.value)" maxlength="80"></td>
                     <td><input type="text" class="editable" value="${item.price}" 
                         onchange="updateData(${index}, 'price', this.value)"></td>
-                    <td><span class="field-count-badge">${filledFields}/29</span></td>
+                    <td><span class="field-count-badge">${filledFields}/27</span></td>
                     <td>
                         <button onclick="showDetails(${index})" class="btn-search" style="margin-right: 5px;">View</button>
                         <button onclick="searchSimilar(${index})" class="btn-search" title="Search for similar art">🔍</button>
@@ -1144,11 +1140,11 @@ This piece represents the vibrant contemporary street art movement that has tran
             const modal = document.getElementById('detailModal');
             const modalBody = document.getElementById('modalBody');
             
-            // Count filled fields (excluding hard-coded size/weight/dimensions)
+            // Count filled fields (excluding hard-coded size/weight/dimensions/variants)
             const requiredFields = ['sku', 'picture', 'title', 'originalPrice', 'price', 'description',
                 'quantity', 'brand', 'category', 'subcategory', 'condition', 'color', 'materials', 
                 'tags', 'imageUrls', 'artist', 'signedBy', 'year', 'shippingFee', 'shippingMethod', 
-                'personalization', 'isDigital', 'whoMadeIt', 'whenMade', 'variantName', 'variantValue', 
+                'personalization', 'isDigital', 'whoMadeIt', 'whenMade', 
                 'seoTitle', 'seoDescription', 'itemSpecifics'];
             
             let filledCount = 0;
@@ -1165,7 +1161,7 @@ This piece represents the vibrant contemporary street art movement that has tran
                         <div style="margin-top: 15px;">
                             <div class="field-group">
                                 <div class="field-label">Fields Completed</div>
-                                <div class="field-value" style="font-size: 24px; color: #00ff88;">${filledCount}/29</div>
+                                <div class="field-value" style="font-size: 24px; color: #00ff88;">${filledCount}/27</div>
                             </div>
                         </div>
                     </div>
@@ -1182,7 +1178,6 @@ This piece represents the vibrant contemporary street art movement that has tran
                 'Artist Info': ['artist', 'signedBy', 'year'],
                 'Shipping': ['shippingFee', 'shippingMethod'],
                 'Product Details': ['personalization', 'isDigital', 'whoMadeIt', 'whenMade'],
-                'Variants': ['variantName', 'variantValue'],
                 'SEO': ['seoTitle', 'seoDescription'],
                 'eBay Specifics': ['itemSpecifics']
             };
@@ -1381,8 +1376,7 @@ This piece represents the vibrant contemporary street art movement that has tran
                 'Size', 'Weight', 'Length', 'Width', 'Height', 'Materials', 'Tags',
                 'Image URLs', 'Artist', 'Signed By', 'Year', 'Shipping Fee',
                 'Shipping Method', 'Personalization', 'Is Digital', 'Who Made It',
-                'When Made', 'Variant Name', 'Variant Value', 'SEO Title',
-                'SEO Description', 'Item Specifics'
+                'When Made', 'SEO Title', 'SEO Description', 'Item Specifics'
             ];
             
             let csv = headers.join(',') + '\n';
@@ -1418,8 +1412,6 @@ This piece represents the vibrant contemporary street art movement that has tran
                     item.isDigital,
                     item.whoMadeIt,
                     item.whenMade,
-                    item.variantName,
-                    item.variantValue,
                     `"${item.seoTitle}"`,
                     `"${item.seoDescription}"`,
                     `"${item.itemSpecifics}"`
