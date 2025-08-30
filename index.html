@@ -400,7 +400,7 @@
 <body>
     <div class="container">
         <h1>✨ Marketplace Magic</h1>
-        <div class="subtitle">AI-Powered Art Listings • 27 Auto-Fill Fields • Smart Renaming • Market Research</div>
+        <div class="subtitle">AI-Powered Art Listings • 26 Auto-Fill Fields • Smart Renaming • Market Research</div>
         
         <div style="text-align: center; margin: 10px 0;">
             <button onclick="resetApiKey()" style="padding: 8px 15px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #999; border-radius: 5px; cursor: pointer; font-size: 12px;">
@@ -469,7 +469,7 @@
             
             <div class="success-notice">
                 <h3 style="color: #00ff88; margin-bottom: 10px;">✅ Data Ready for Export!</h3>
-                <p>27 marketplace fields auto-generated (size/weight/dimensions will be hard-coded). You can edit any field below before exporting.</p>
+                <p>26 marketplace fields auto-generated (original price, size, weight, dimensions are manual). You can edit any field below before exporting.</p>
             </div>
             
             <div style="text-align: center; margin: 30px 0;">
@@ -812,17 +812,14 @@
             const condition = analysis.condition || 'Very Good';
             const year = new Date().getFullYear().toString();
             
-            // Pricing based on artist
-            let originalPrice = '$199.00';
+            // Pricing based on artist (only suggested price, not original)
             let price = '$149.00';
             let shippingFee = '$12.99';
             
             if (artist === 'Death NYC') {
-                originalPrice = '$399.00';
                 price = '$299.00';
                 shippingFee = '$14.99';
             } else if (artist === 'Shepard Fairey') {
-                originalPrice = '$799.00';
                 price = '$599.00';
                 shippingFee = '$19.99';
             }
@@ -957,7 +954,7 @@ TAGS: ${artist} | ${subject} | Street Art | Contemporary Art | Urban Art | Moder
                 sku: `${artist.replace(/\s+/g, '')}-${Date.now().toString().slice(-6)}-${index + 1}`,
                 picture: newFilename,
                 title: title,
-                originalPrice: originalPrice,
+                originalPrice: '',  // Manual entry
                 price: price,
                 description: description,
                 quantity: 1,
@@ -1000,7 +997,7 @@ TAGS: ${artist} | ${subject} | Street Art | Contemporary Art | Urban Art | Moder
                 sku: `ART-${Date.now().toString().slice(-6)}`,
                 picture: newFilename,
                 title: 'Contemporary Street Art Print - Original Artwork',
-                originalPrice: '$199.00',
+                originalPrice: '',  // Manual entry
                 price: '$149.00',
                 description: `🎨 AUTHENTIC CONTEMPORARY STREET ART - COLLECTIBLE ARTWORK 🎨
 
@@ -1098,8 +1095,8 @@ This piece represents the vibrant contemporary street art movement that has tran
             tbody.innerHTML = '';
             
             processedData.forEach((item, index) => {
-                // Count filled fields (27 required fields - excluding size/weight/dimensions/variants)
-                const requiredFields = ['sku', 'picture', 'title', 'originalPrice', 'price', 'description',
+                // Count filled fields (26 auto-filled fields - excluding manual entries)
+                const requiredFields = ['sku', 'picture', 'title', 'price', 'description',
                     'quantity', 'brand', 'category', 'subcategory', 'condition', 'color', 'materials', 
                     'tags', 'imageUrls', 'artist', 'signedBy', 'year', 'shippingFee', 'shippingMethod', 
                     'personalization', 'isDigital', 'whoMadeIt', 'whenMade', 
@@ -1122,7 +1119,7 @@ This piece represents the vibrant contemporary street art movement that has tran
                         onchange="updateData(${index}, 'title', this.value)" maxlength="80"></td>
                     <td><input type="text" class="editable" value="${item.price}" 
                         onchange="updateData(${index}, 'price', this.value)"></td>
-                    <td><span class="field-count-badge">${filledFields}/27</span></td>
+                    <td><span class="field-count-badge">${filledFields}/26</span></td>
                     <td>
                         <button onclick="showDetails(${index})" class="btn-search" style="margin-right: 5px;">View</button>
                         <button onclick="searchSimilar(${index})" class="btn-search" title="Search for similar art">🔍</button>
@@ -1140,8 +1137,8 @@ This piece represents the vibrant contemporary street art movement that has tran
             const modal = document.getElementById('detailModal');
             const modalBody = document.getElementById('modalBody');
             
-            // Count filled fields (excluding hard-coded size/weight/dimensions/variants)
-            const requiredFields = ['sku', 'picture', 'title', 'originalPrice', 'price', 'description',
+            // Count filled fields (26 auto-filled fields - excluding manual entries)
+            const requiredFields = ['sku', 'picture', 'title', 'price', 'description',
                 'quantity', 'brand', 'category', 'subcategory', 'condition', 'color', 'materials', 
                 'tags', 'imageUrls', 'artist', 'signedBy', 'year', 'shippingFee', 'shippingMethod', 
                 'personalization', 'isDigital', 'whoMadeIt', 'whenMade', 
@@ -1161,7 +1158,7 @@ This piece represents the vibrant contemporary street art movement that has tran
                         <div style="margin-top: 15px;">
                             <div class="field-group">
                                 <div class="field-label">Fields Completed</div>
-                                <div class="field-value" style="font-size: 24px; color: #00ff88;">${filledCount}/27</div>
+                                <div class="field-value" style="font-size: 24px; color: #00ff88;">${filledCount}/26</div>
                             </div>
                         </div>
                     </div>
