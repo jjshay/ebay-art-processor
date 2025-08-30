@@ -739,6 +739,88 @@
             }, 1000);
         }
         
+        async function enhanceWithOpenAI(geminiAnalysis, base64) {
+            try {
+                const prompt = `You are an expert art appraiser analyzing a ${geminiAnalysis.artist} artwork featuring ${geminiAnalysis.subject}.
+                
+                Based on this ${geminiAnalysis.artist} piece, provide enhanced details:
+                1. Specific visual elements visible in the image
+                2. Cultural references and significance
+                3. Collector appeal points
+                4. Market positioning
+                5. Detailed color palette
+                6. Artistic techniques used
+                
+                ${geminiAnalysis.artist === 'Death NYC' ? 'Death NYC is known for dollar bill collages with pop culture icons, often featuring vintage imagery mixed with contemporary subjects.' : ''}
+                ${geminiAnalysis.artist === 'Shepard Fairey' ? 'Shepard Fairey created OBEY and uses propaganda-style imagery with bold graphics and political messages.' : ''}
+                
+                Return as JSON with fields: {enhancedSubject, visualDetails, culturalContext, collectorNotes, colorPalette, techniques, marketValue}`;
+                
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4-vision-preview',
+                        messages: [
+                            {
+                                role: 'user',
+                                content: [
+                                    { type: 'text', text: prompt },
+                                    { 
+                                        type: 'image_url', 
+                                        image_url: {
+                                            url: `data:image/jpeg;base64,${base64}`,
+                                            detail: 'high'
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        max_tokens: 500,
+                        temperature: 0.3
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('OpenAI API error');
+                }
+                
+                const data = await response.json();
+                const content = data.choices[0].message.content;
+                
+                // Parse enhanced details
+                let enhanced = {};
+                try {
+                    const jsonMatch = content.match(/\{[\s\S]*\}/);
+                    if (jsonMatch) {
+                        enhanced = JSON.parse(jsonMatch[0]);
+                    }
+                } catch (e) {
+                    console.log('Could not parse OpenAI response');
+                }
+                
+                // Merge with Gemini analysis
+                return {
+                    ...geminiAnalysis,
+                    subject: enhanced.enhancedSubject || geminiAnalysis.subject,
+                    visualDetails: enhanced.visualDetails || '',
+                    culturalContext: enhanced.culturalContext || '',
+                    collectorNotes: enhanced.collectorNotes || '',
+                    colors: enhanced.colorPalette ? enhanced.colorPalette.split(',').map(c => c.trim()) : geminiAnalysis.colors,
+                    techniques: enhanced.techniques || '',
+                    marketValue: enhanced.marketValue || '',
+                    enhanced: true
+                };
+                
+            } catch (error) {
+                console.error('OpenAI enhancement error:', error);
+                return geminiAnalysis; // Fall back to original
+            }
+        }
+        
         async function analyzeWithGemini(base64) {
             try {
                 const prompt = `Analyze this artwork and identify:
@@ -824,13 +906,16 @@
                 shippingFee = '$19.99';
             }
             
-            // Generate title and SEO
-            const title = `${artist} - ${subject} - Original Street Art Print Collectible`.substring(0, 80);
+            // Generate specific title based on actual subject
+            const title = analysis.enhanced && analysis.enhancedSubject ? 
+                `${artist} - ${analysis.enhancedSubject} - Original Street Art Print`.substring(0, 80) :
+                `${artist} - ${subject} - Original Street Art Print`.substring(0, 80);
             const seoTitle = `${artist} ${subject} Street Art | Authentic Contemporary Print`;
             const seoDescription = `Authentic ${artist} artwork featuring ${subject}. Original street art print in ${condition} condition. Perfect for collectors and art enthusiasts. Fast shipping.`;
             
-            // Generate comprehensive description
-            const description = `🎨 AUTHENTIC ${artist.toUpperCase()} ORIGINAL ARTWORK - INVESTMENT-GRADE STREET ART 🎨
+            // Generate comprehensive description with enhanced details
+            const enhancedSubject = analysis.enhancedSubject || subject;
+            const description = `🎨 AUTHENTIC ${artist.toUpperCase()} - "${enhancedSubject.toUpperCase()}" - ORIGINAL ARTWORK 🎨
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -850,7 +935,7 @@ This piece represents the vibrant contemporary street art movement that has tran
 📌 ARTWORK DETAILS:
 
 • ARTIST: ${artist}
-• SUBJECT/TITLE: ${subject}
+• SUBJECT/TITLE: ${enhancedSubject}
 • STYLE: ${analysis.style || 'Contemporary Street Art'}
 • MEDIUM: ${analysis.medium || 'High-Quality Print on Archival Paper'}
 • CONDITION: ${condition} - Carefully preserved and stored in protective sleeve
