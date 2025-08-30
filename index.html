@@ -496,7 +496,7 @@
                             <th>Title</th>
                             <th>Price</th>
                             <th>Fields</th>
-                            <th>Actions</th>
+                            <th>Actions / Market Research</th>
                         </tr>
                     </thead>
                     <tbody id="resultsTableBody"></tbody>
@@ -1207,7 +1207,9 @@ This piece represents the vibrant contemporary street art movement that has tran
                     <td><span class="field-count-badge">${filledFields}/26</span></td>
                     <td>
                         <button onclick="showDetails(${index})" class="btn-search" style="margin-right: 5px;">View</button>
-                        <button onclick="searchSimilar(${index})" class="btn-search" title="Search for similar art">🔍</button>
+                        <button onclick="searchSimilar(${index})" class="btn-search" style="background: linear-gradient(135deg, #ff6b6b, #ff8787); padding: 8px 20px;" title="Search eBay/Google for similar art">
+                            🔍 Search Similar
+                        </button>
                     </td>
                 `;
             });
@@ -1315,7 +1317,10 @@ This piece represents the vibrant contemporary street art movement that has tran
         
         async function searchSimilar(index) {
             const item = processedData[index];
-            const searchQuery = `${item.artist} ${item.title}`;
+            // Use the enhanced subject if available for more specific searches
+            const searchQuery = item.enhancedSubject ? 
+                `${item.artist} ${item.enhancedSubject}` : 
+                `${item.artist} ${item.subject || item.title}`;
             
             showMessage(`Searching for: ${searchQuery}...`, 'success');
             
@@ -1332,9 +1337,11 @@ This piece represents the vibrant contemporary street art movement that has tran
             `;
             modal.style.display = 'block';
             
-            // Create search links
-            const ebaySearchLink = `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(searchQuery)}&_sacat=550`;
+            // Create search links with the specific artwork name
+            const ebaySearchLink = `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(searchQuery)}&_sacat=550&_sop=15`; // Sort by price + shipping: lowest first
             const googleSearchLink = `https://www.google.com/search?q=${encodeURIComponent(searchQuery + ' art for sale')}&tbm=isch`;
+            const etsySearchLink = `https://www.etsy.com/search?q=${encodeURIComponent(searchQuery)}`;
+            const mercariSearchLink = `https://www.mercari.com/search/?keyword=${encodeURIComponent(searchQuery)}`;
             
             // Use AI for market analysis
             try {
@@ -1390,13 +1397,34 @@ This piece represents the vibrant contemporary street art movement that has tran
                         </div>
                         
                         <div>
-                            <h3 style="color: #00ccff; margin-bottom: 15px;">🔗 Search Marketplaces</h3>
-                            <a href="${ebaySearchLink}" target="_blank" class="btn-download" style="display: block; text-align: center; text-decoration: none; margin-bottom: 10px;">
-                                🛍️ Search on eBay
-                            </a>
-                            <a href="${googleSearchLink}" target="_blank" class="btn-download" style="display: block; text-align: center; text-decoration: none;">
-                                🔍 Search on Google
-                            </a>
+                            <h3 style="color: #00ccff; margin-bottom: 15px;">🔗 Search for: "${searchQuery}"</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <a href="${ebaySearchLink}" target="_blank" class="btn-download" style="display: block; text-align: center; text-decoration: none; background: linear-gradient(135deg, #f5a623, #f76b1c);">
+                                    <div style="font-size: 24px;">🛍️</div>
+                                    eBay Results
+                                </a>
+                                <a href="${googleSearchLink}" target="_blank" class="btn-download" style="display: block; text-align: center; text-decoration: none; background: linear-gradient(135deg, #4285f4, #34a853);">
+                                    <div style="font-size: 24px;">🔍</div>
+                                    Google Images
+                                </a>
+                                <a href="${etsySearchLink}" target="_blank" class="btn-download" style="display: block; text-align: center; text-decoration: none; background: linear-gradient(135deg, #f56223, #f1641e);">
+                                    <div style="font-size: 24px;">🎨</div>
+                                    Etsy Results
+                                </a>
+                                <a href="${mercariSearchLink}" target="_blank" class="btn-download" style="display: block; text-align: center; text-decoration: none; background: linear-gradient(135deg, #ee4d2d, #ff6533);">
+                                    <div style="font-size: 24px;">📦</div>
+                                    Mercari Results
+                                </a>
+                            </div>
+                            <div style="margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                                <p style="color: #00ff88; font-weight: bold; margin-bottom: 10px;">💡 Pro Tips:</p>
+                                <ul style="color: #ccc; font-size: 14px; margin-left: 20px;">
+                                    <li>eBay: Check "Sold" listings to see actual sale prices</li>
+                                    <li>Google: Find similar artworks and pricing trends</li>
+                                    <li>Etsy: Compare handmade/vintage pricing</li>
+                                    <li>Mercari: Check recent sales and active listings</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     
