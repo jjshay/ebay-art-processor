@@ -608,9 +608,12 @@
         </div>
     </div>
     
+    <script src="config.js"></script>
     <script>
-        // Gemini API key management
-        let GEMINI_KEY = localStorage.getItem('gemini_key') || '';
+        // API key management - Use config values if available
+        let GEMINI_KEY = localStorage.getItem('gemini_key') || (typeof API_CONFIG !== 'undefined' ? API_CONFIG.GEMINI_KEY : '');
+        let OPENAI_KEY = localStorage.getItem('openai_key') || (typeof API_CONFIG !== 'undefined' ? API_CONFIG.OPENAI_KEY : '');
+        let EBAY_APP_ID = localStorage.getItem('ebay_app_id') || (typeof API_CONFIG !== 'undefined' ? API_CONFIG.EBAY_APP_ID : '');
         
         let selectedFiles = [];
         let processedData = [];
