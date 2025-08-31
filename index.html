@@ -1475,18 +1475,29 @@ This piece represents the vibrant contemporary street art movement that has tran
                 `;
                 
             } catch (error) {
+                // Show all 4 marketplaces even on error
                 modalBody.innerHTML = `
                     <div style="text-align: center; padding: 40px;">
-                        <h3 style="color: #ff6464;">Search links ready!</h3>
-                        <div style="margin-top: 20px;">
-                            <a href="${ebaySearchLink}" target="_blank" class="btn-download" style="display: inline-block; text-decoration: none; margin: 10px;">
-                                🛍️ Search on eBay
+                        <h3 style="color: #00ff88; margin-bottom: 20px;">🔍 Search for: "${searchQuery}"</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 500px; margin: 0 auto;">
+                            <a href="${ebaySearchLink}" target="_blank" class="btn-download" style="display: block; text-align: center; text-decoration: none; background: linear-gradient(135deg, #f5a623, #f76b1c); padding: 20px;">
+                                <div style="font-size: 32px;">🛍️</div>
+                                <div style="margin-top: 5px;">eBay</div>
                             </a>
-                            <a href="${googleSearchLink}" target="_blank" class="btn-download" style="display: inline-block; text-decoration: none; margin: 10px;">
-                                🔍 Search on Google
+                            <a href="${googleSearchLink}" target="_blank" class="btn-download" style="display: block; text-align: center; text-decoration: none; background: linear-gradient(135deg, #4285f4, #34a853); padding: 20px;">
+                                <div style="font-size: 32px;">🔍</div>
+                                <div style="margin-top: 5px;">Google Images</div>
+                            </a>
+                            <a href="${etsySearchLink}" target="_blank" class="btn-download" style="display: block; text-align: center; text-decoration: none; background: linear-gradient(135deg, #f56223, #f1641e); padding: 20px;">
+                                <div style="font-size: 32px;">🎨</div>
+                                <div style="margin-top: 5px;">Etsy</div>
+                            </a>
+                            <a href="${mercariSearchLink}" target="_blank" class="btn-download" style="display: block; text-align: center; text-decoration: none; background: linear-gradient(135deg, #ee4d2d, #ff6533); padding: 20px;">
+                                <div style="font-size: 32px;">📦</div>
+                                <div style="margin-top: 5px;">Mercari</div>
                             </a>
                         </div>
-                        <button onclick="closeSearchModal()" style="margin-top: 20px; padding: 10px 20px;">Close</button>
+                        <button onclick="closeSearchModal()" style="margin-top: 30px; padding: 12px 30px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; cursor: pointer;">Close</button>
                     </div>
                 `;
             }
