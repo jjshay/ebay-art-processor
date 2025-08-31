@@ -1353,11 +1353,30 @@ This piece represents the vibrant contemporary street art movement that has tran
             const etsySearchLink = `https://www.etsy.com/search?q=${encodeURIComponent(searchQuery)}`;
             const mercariSearchLink = `https://www.mercari.com/search/?keyword=${encodeURIComponent(searchQuery)}`;
             
-            // Use AI for market analysis
+            // Generate market analysis based on artist
+            let marketAnalysis = {
+                priceRange: '$50-$500',
+                demand: 'Medium',
+                strategy: 'Price competitively based on condition and authenticity',
+                tips: ['Check sold listings', 'Compare conditions', 'Verify authenticity']
+            };
+            
+            // Adjust based on artist
+            if (item.artist === 'Death NYC') {
+                marketAnalysis.priceRange = '$150-$500';
+                marketAnalysis.demand = 'High';
+                marketAnalysis.strategy = 'Death NYC pieces typically sell for $200-$400 depending on subject and condition';
+            } else if (item.artist === 'Shepard Fairey') {
+                marketAnalysis.priceRange = '$300-$1500';
+                marketAnalysis.demand = 'Very High';
+                marketAnalysis.strategy = 'Shepard Fairey works command premium prices, especially signed pieces';
+            }
+            
+            // Try to enhance with AI if available
             try {
-                const marketPrompt = `Based on: ${item.artist} - ${item.title}
-                Current price: ${item.price}
-                Provide market insights as JSON: {priceRange, demand, strategy, tips}`;
+                const marketPrompt = `Based on: ${item.artist} artwork featuring ${item.subject || item.title}
+                Suggested price: ${item.price}
+                Provide realistic market insights as JSON: {priceRange, demand, strategy}`;
                 
                 const response = await fetch(
                     `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
@@ -1378,25 +1397,23 @@ This piece represents the vibrant contemporary street art movement that has tran
                 
                 const data = await response.json();
                 const analysisText = data.candidates[0].content.parts[0].text;
-                let analysis = { 
-                    priceRange: '$100-$500', 
-                    demand: 'Medium', 
-                    strategy: 'Competitive pricing based on condition', 
-                    tips: ['Check sold listings', 'Compare conditions', 'Note authenticity'] 
-                };
-                
                 try {
                     const jsonMatch = analysisText.match(/\{[\s\S]*\}/);
                     if (jsonMatch) {
                         const parsed = JSON.parse(jsonMatch[0]);
-                        // Ensure all values are strings, not objects
-                        analysis.priceRange = String(parsed.priceRange || analysis.priceRange);
-                        analysis.demand = String(parsed.demand || analysis.demand);
-                        analysis.strategy = String(parsed.strategy || analysis.strategy);
-                        analysis.tips = Array.isArray(parsed.tips) ? parsed.tips : analysis.tips;
+                        // Update with AI insights if valid
+                        if (parsed.priceRange && typeof parsed.priceRange === 'string') {
+                            marketAnalysis.priceRange = parsed.priceRange;
+                        }
+                        if (parsed.demand && typeof parsed.demand === 'string') {
+                            marketAnalysis.demand = parsed.demand;
+                        }
+                        if (parsed.strategy && typeof parsed.strategy === 'string') {
+                            marketAnalysis.strategy = parsed.strategy;
+                        }
                     }
                 } catch (e) {
-                    console.log('Using default market analysis');
+                    console.log('Using default market analysis for', item.artist);
                 }
                 
                 // Update modal with results
@@ -1406,17 +1423,17 @@ This piece represents the vibrant contemporary street art movement that has tran
                             <h3 style="color: #00ff88; margin-bottom: 15px;">📊 Market Analysis</h3>
                             <div class="field-group">
                                 <div class="field-label">Typical Price Range</div>
-                                <div class="field-value">${String(analysis.priceRange || 'N/A')}</div>
+                                <div class="field-value" style="color: #00ff88; font-weight: bold;">${marketAnalysis.priceRange}</div>
                             </div>
                             <div class="field-group">
                                 <div class="field-label">Market Demand</div>
-                                <div class="field-value" style="color: ${analysis.demand === 'High' ? '#00ff88' : analysis.demand === 'Low' ? '#ff6464' : '#ffcc00'}">
-                                    ${String(analysis.demand || 'Medium')}
+                                <div class="field-value" style="color: ${marketAnalysis.demand === 'High' || marketAnalysis.demand === 'Very High' ? '#00ff88' : marketAnalysis.demand === 'Low' ? '#ff6464' : '#ffcc00'}; font-weight: bold;">
+                                    ${marketAnalysis.demand}
                                 </div>
                             </div>
                             <div class="field-group">
                                 <div class="field-label">Pricing Strategy</div>
-                                <div class="field-value">${String(analysis.strategy || 'Competitive pricing')}</div>
+                                <div class="field-value" style="font-size: 13px; line-height: 1.4;">${marketAnalysis.strategy}</div>
                             </div>
                         </div>
                         
